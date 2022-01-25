@@ -1,0 +1,182 @@
+{%  extends 'base.html'  %}
+
+{%  load static %}
+{%  load sidebar %}
+
+{% block title %}{{ post.title }}  ::   {{   block.super  }}{% endblock %}
+
+{%  block home-section %}
+<!-- Home Section -->
+<section id="home" class="main-single-post parallax-section">
+     <div class="overlay"></div>
+     <div class="container">
+          <div class="row">
+
+               <div class="col-md-12 col-sm-12">
+                    <h1>{{    post.title     }}</h1>
+               </div>
+
+          </div>
+     </div>
+</section>
+{%   endblock  %}
+
+{%  block content %}
+
+<!-- Blog Single Post Section -->
+
+<section id="blog-single-post">
+     <div class="container">
+       <div class="row">   
+     <div class="col-md-12">
+     <div class="border-top">
+
+          <div class="col-md-8">
+               <div class="blog-area">
+               <div class="blog-single-post part">
+
+                    <section id="gallery">
+                         <div class="gallery-thumb">
+                              {%  if post.photo  %}
+                              <a class="image-popup">
+                              <img src="{{ post.photo.url }}" alt="{{ post.title }}" class="img-responsive">
+                              </a>
+                              {%  else %}
+                              <a class="image-popup">
+                              <img src="https://picsum.photos/id/1060/300/200/?blur=2" class="img-responsive" alt="{{ post.title }}">
+                              </a>
+                              {%  endif  %}
+                         </div>
+                    </section>
+
+               <div class="blog-post-title">
+                    <h2>{{    post.title     }}</a></h2> 
+                    </div>
+
+                         <div class="blog-post-format">
+                              <span><a href="#"><img src="{%  static 'images/avatar1.jpg' %}" class="img-responsive img-circle"> {{ post.author }}</a></span>
+                              <span><i class="fa fa-date"></i> {{ post.created_at }}</span>
+                              <span><a href="#"><i class="fa fa-comment-o"></i> 124 Comments</a></span>
+                         </div>
+                         
+                         <div class="blog-post-format"><span>
+                              Категория:
+                         <a href="{{      post.category.get_absolute_url   }}">{{ post.category }}</a>
+                         </span></div>
+          
+                         {% if post.tags.exists %}
+                         <div class="blog-post-format"><span>
+                         Теги:
+                         {%   for tag in post.tags.all  %}
+                         <a href="{{      tag.get_absolute_url   }}">{{ tag.title }}</a>
+                         {%   endfor     %}
+                         </span></div>
+                         {%   endif %}
+                         
+                         <div class="blog-post-format"><span>Количество просмотров:  {{   post.views   }}</span></div>
+                         
+
+                         <div class="blog-post-des">
+                              <p>{{post.content | safe }}</p>
+                              <blockquote>Тестовый текст</blockquote>
+
+                         <div class="blog-author">
+                              <div class="media">
+                                   <div class="media-object pull-left">
+                                        <a href="#"><img src="{%  static 'images/avatar1.jpg' %}" class="img-responsive img-circle">
+                                   </div>
+                                   <div class="media-body">
+                                        <h3 class="media-heading"><a href="#">{{ post.author }}</a></h3>
+                                        <p>Описание автора</p>
+                                   </div>
+                              </div>
+                         </div>
+
+                         <div class="blog-comment">
+                              <h3>Комментарии</h3>
+                                   <div class="media">
+                                        <div class="media-object pull-left">
+                                             <a href="#"><img src="{%  static 'images/avatar1.jpg' %}" class="img-responsive img-circle">
+                                        </div>
+                                        <div class="media-body">
+                                             <h3 class="media-heading">David Jones</h3>
+                                             <span>3 дня назад</span>
+                                             <p>Тестовый текст</p>
+                                        </div>
+                                   </div>
+                                   <div class="media">
+                                        <div class="media-object pull-left">
+                                             <a href="#"><img src="{%  static 'images/avatar1.jpg' %}" class="img-responsive img-circle">
+                                        </div>
+                                        <div class="media-body">
+                                             <h3 class="media-heading">Omar Larus</h3>
+                                             <span>5 дней назад</span>
+                                             <p>Тестовый текст</p>
+                                        </div>
+                                   </div>
+                                   <div class="media">
+                                        <div class="media-object pull-left">
+                                             <a href="#"><img src="{%  static 'images/avatar1.jpg' %}" class="img-responsive img-circle">
+                                        </div>
+                                        <div class="media-body">
+                                             <h3 class="media-heading">Walker Jen</h3>
+                                             <span>27 Июля, 2021</span>
+                                             <p>Тестовый текст</p>
+                                        </div>
+                                   </div>
+                                   <div class="media">
+                                        <div class="media-object pull-left">
+                                             <a href="#"><img src="{%  static 'images/avatar1.jpg' %}" class="img-responsive img-circle">
+                                        </div>
+                                        <div class="media-body">
+                                             <h3 class="media-heading">Jen Lopez</h3>
+                                             <span>24 июля, 2021</span>
+                                             <p>Тестовый текст</p>
+                                        </div>
+                                   </div>
+                         </div>
+
+                         <div class="blog-comment-form">
+                              <h3>Оставьте комментарий</h3>
+                                   <form action="#" method="post">
+                           	 	 	 	<input type="text" class="form-control" placeholder="Имя" name="name" required>
+                                        <input type="email" class="form-control" placeholder="Email" name="email" required>
+                                        <textarea name="message" rows="5" class="form-control" id="message" placeholder="Сообщение" message="message" required="required"></textarea>
+                                        <div class="col-md-3 col-sm-4">
+                                             <input name="submit" type="submit" class="form-control" id="submit" value="Оставить">
+                                        </div>
+                                   </form>
+                         </div>
+                    </div>
+          </div>
+     
+</div>
+ </div>
+
+
+ 
+<div class="col-md-4">
+    
+    
+     <div class="blog-comment-form">
+          <a href="javascript: void 0">
+               <h3>Поиск</h3>
+               <form action="{%  url 'search' %}" method="get">
+                    <input type="text" class="form-control" placeholder="Поиск..." name="s" required>
+               </form></a>
+          </div>
+   
+     {%   get_popular 3 %}
+   
+     {%   get_tags %}
+   
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</section>
+
+{%   endblock  %}
+

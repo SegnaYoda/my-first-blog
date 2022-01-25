@@ -1,0 +1,69 @@
+{%  extends 'base.html'  %}
+
+{%  load static %}
+
+
+{% load cache %}
+
+{% block title %}{{ title }}  ::   {{   block.super  }}{% endblock %}
+
+
+{%  block home-section %}
+<!-- Home Section -->
+
+<section id="home" class="main-gallery parallax-section">
+     <div class="overlay"></div>
+     <div id="particles-js"></div>
+     <div class="container">
+          <div class="row">
+ 
+               <div class="col-md-12 col-sm-12">
+                    <h1>{{  title }}</h1>
+               </div>
+          </div>
+     </div>
+ </section>
+ {%   endblock   %}
+
+ 
+{%  block content %}
+
+<section id="blog">
+    <div class="container">
+         <div class="row">
+              <div class="col-md-offset-1 col-md-10 col-sm-12">
+               <div class="clearfix"></div>
+               {%    for post in posts   %}
+               <div class="col-md-4 col-sm-4">
+                   
+                    <section id="gallery">
+                         <div class="gallery-thumb">
+                             
+                              {%  if post.photo  %}
+                              <a href="{{ post.get_absolute_url }}" class="image-popup">
+                              <img src="{{ post.photo.url }}" alt="{{ post.title }}" class="img-responsive">
+                              </a>
+                              {%  else %}
+                              <a href="{{ post.get_absolute_url }}" class="image-popup">
+                              <img src="https://picsum.photos/id/1060/300/200/?blur=2" class="img-responsive" alt="{{ post.title }}">
+                              </a>
+                              {%  endif  %}
+                         
+                         </div>
+                         </section>
+               
+                    <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+                    <h4><span>Posted by: <span class='author-name'>{{ post.author }}</span></span></h4>
+                    <div class="card-text">
+                    <h4>{{ post.content|safe|linebreaks|truncatewords:20 }}</h4>
+                    </div>
+                    <h4><span>{{ post.created_at }}</span></h4>
+               </div>
+               {%    endfor   %}
+
+          </div>
+     </div>
+               
+     </section>
+
+{%   endblock   %}

@@ -1,9 +1,9 @@
 {%  load static %}
 {% load cache %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-
+     
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 <meta name="description" content="">
@@ -11,41 +11,29 @@
 <meta name="author" content="">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-<title>Neuron HTML CSS Template</title>
+<title>{% block title %}Django & HTML{% endblock %}</title>
 <!--         -->
 <link rel="stylesheet" href="{%  static 'css/bootstrap.min.css' %}">
 <link rel="stylesheet" href="{%  static 'css/font-awesome.min.css' %}">
+<link rel="stylesheet" href="{%  static 'css/magnific-popup.css' %}">
 
 <!-- Main css -->
-<link rel="stylesheet" href="{%  static 'css/style.css' %}">
+<link href="{%  static 'css/style.css' %}" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Lora|Merriweather:300,400" rel="stylesheet">
 
 </head>
 <body>
-{% cache 20 header %}
+
 {%    include 'inc/_header.html'  %}
-{% endcache %}
-<!-- Home Section -->
 
-<section id="home" class="main-home parallax-section">
-     <div class="overlay"></div>
-     <div id="particles-js"></div>
-     <div class="container">
-          <div class="row">
-
-               <div class="col-md-12 col-sm-12">
-                    <h1>Hello! This is Neuron.</h1>
-                    <h4>Responsive Blog HTML CSS Website Template</h4>
-                    <a href="#blog" class="smoothScroll btn btn-default">Discover More</a>
-               </div>
-
-          </div>
-     </div>
-</section>
+{%  block home-section %} {%   endblock   %}
 
 <!-- Blog Section -->
 
 {%  block content %} {%   endblock   %}
+
+
+{%    include 'inc/_pagination.html'  %}
 
 <!-- Footer Section -->
 {% cache 20 footer %}
@@ -58,11 +46,13 @@
 
 <script src="{%  static 'js/jquery.js' %}"></script>
 <script src="{%  static 'js/bootstrap.min.js' %}"></script>
+<script src="{%  static 'js/magnific-popup-options.js' %}"></script>
 <script src="{%  static 'js/particles.min.js' %}"></script>
 <script src="{%  static 'js/app.js' %}"></script>
 <script src="{%  static 'js/jquery.parallax.js' %}"></script>
 <script src="{%  static 'js/smoothscroll.js' %}"></script>
 <script src="{%  static 'js/custom.js' %}"></script>
+
 
 </body>
 </html>

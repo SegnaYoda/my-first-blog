@@ -99,12 +99,16 @@ a:hover, a:active, a:focus {
 }
 
 #about, 
-#gallery,
 #contact,
 #blog, 
 #blog-single-post {
   padding-top: 60px;
   padding-bottom: 80px;
+}
+
+#gallery {
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 
 .main-about,
@@ -291,7 +295,7 @@ a:hover, a:active, a:focus {
 .main-single-post {
   background: url('../images/single-post-bg.jpg') no-repeat;
 }
-
+ 
 .main-gallery {
   background: url('../images/gallery-bg.jpg') no-repeat;
 }
@@ -605,7 +609,6 @@ a:hover, a:active, a:focus {
 }
 
 
-
 /*---------------------------------------
    Blog Single Post section              
 -----------------------------------------*/
@@ -734,7 +737,6 @@ footer .footer-copyright {
 
   .main-about,
   .main-single-post,  
-  .main-gallery,
   .main-contact {
     height: 35vh;
   }
@@ -773,7 +775,7 @@ footer .footer-copyright {
     font-size: 42px;
   }
 
-  #about, #gallery,
+  #about,
   #contact,
   #blog, #blog-single-post {
     padding-top: 60px;

@@ -1,11 +1,10 @@
 {%  load menu %}
 <!-- PRE LOADER -->
 <div class="preloader">
-    <div class="sk-spinner sk-spinner-wordpress">
-         <span class="sk-inner-circle"></span>
-    </div>
-</div>
-
+     <div class="sk-spinner sk-spinner-wordpress">
+          <span class="sk-inner-circle"></span>
+     </div>
+ </div>
 <!-- Navigation section  -->
 <div class="navbar navbar-default navbar-static-top" role="navigation">
     <div class="container">
@@ -13,10 +12,13 @@
          <div class="navbar-header">
               <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                    <span class="icon icon-bar"></span>
+                   <span class="icon icon-bar"></span>
+                   <span class="icon icon-bar"></span>
               </button>
-              <a href="{% url 'home' %}" class="navbar-brand">Segnarock Сергей Иодо</a>
+              <a href="{% url 'index-home' %}" class="navbar-brand">Segnarock</a>
          </div>
+         <div class="collapse navbar-collapse">
          {%     show_menu   %}
-
+     </div>
  </div>
 </div>

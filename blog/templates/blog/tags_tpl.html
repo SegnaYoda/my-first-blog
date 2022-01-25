@@ -1,0 +1,13 @@
+<div class="tags">
+    <h3 class="sidebar-title">Теги</h3>  
+    </div>
+    {%  for tag in tags %}
+    <button type="button" class="btn btn-default">
+    <a href="{{  tag.get_absolute_url }}"><p class="text-warning bg-dark">{{ tag.title }}</p>
+    </a>
+</button>
+    {%  endfor  %}
+</div>
+
+
+   

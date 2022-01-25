@@ -10,6 +10,13 @@ particlesJS.load('particles-js', 'particles.json', function() {
 */
 
 /* Otherwise just put the config content (json): */
+  $('.menu a').each(function(){
+    let location = window.location.protocol + '//' + window.location.host + window.location.pathname;
+    let link = this.href;
+    if(location == link){
+      $(this).parent().addClass('active');
+    }
+  });
 
 particlesJS('particles-js',
   

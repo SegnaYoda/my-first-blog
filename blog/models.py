@@ -1,3 +1,4 @@
+from telnetlib import STATUS
 from django.urls import reverse
 from distutils.command.upload import upload
 from django.db import models
@@ -46,6 +47,7 @@ class Post(models.Model):
     views = models.IntegerField(default=0, verbose_name='Количество просмотров')
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='posts')
     tags = models.ManyToManyField(Tag, blank=True, related_name='posts')
+    #status = models.IntegerField(choices=STATUS, default=0)         # for RSS
 
     def __str__(self):
         return self.title

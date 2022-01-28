@@ -129,11 +129,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')    #сбор всей статики из приложений в одно место
+STATIC_URL = '/static/'
+STATIC_ROOT = '/static/'
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')    #сбор всей статики из приложений в одно место
 STATICFILES_DIRS = [    
     os.path.join(BASE_DIR, 'siteblog/static'),  
     ] #перечисленные пути для файлов статики
+
+
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -181,7 +184,6 @@ CKEDITOR_CONFIGS = {
                 # put the name of your editor.ui.addButton here
                 'Preview',
                 'Maximize',
-
             ]},
         ],
         'toolbar': 'YourCustomToolbarConfig',  # put selected toolbar config here
@@ -207,7 +209,7 @@ CKEDITOR_CONFIGS = {
             'clipboard',
             'dialog',
             'dialogui',
-            'elementspath'    
+            'elementspath',
             ]),   
         }     
     }

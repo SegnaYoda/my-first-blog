@@ -11,7 +11,7 @@ from django.utils.safestring import mark_safe
 
 
 class PostAdminForm(forms.ModelForm):   #редактирование контента пользвателю из сайта
-    content = forms.CharField(widget=CKEditorUploadingWidget()) #переопределение поля контента из файла models(контент новости)
+    content = forms.CharField(label="Контент статьи", widget=CKEditorUploadingWidget()) #переопределение поля контента из файла models(контент новости)
 
     class Meta:
         model = Post

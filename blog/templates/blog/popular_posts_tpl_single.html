@@ -1,20 +1,22 @@
+{%  if post %}
+<div class="col-md-offset-1 col-md-10 col-sm-12">
 
-  <div class="col-md-offset-1 col-md-10 col-sm-12">
+  <div class="media">
     <div class="col-md-6 col-sm-6">
     <h2>Популярная статья</h2>
-  </div> </div> 
+  </div> 
+</div> 
+ </div> 
 
 
 
 <div class="col-md-offset-1 col-md-10 col-sm-12">
+
+  <div class="media">
 {% for post in post %}
 
 <div class="col-md-6 col-sm-6">
-
-  <a href="{{ post.get_absolute_url }}">
-                    
-  <h3>{{ post.title }}</h3>
-  </a>                      
+  <a href="{{ post.get_absolute_url }}"><h3>{{ post.title }}</h3></a>                      
   <p>{{ post.content|safe|linebreaks|truncatewords:30 }}</p>
 </div>
 
@@ -28,8 +30,11 @@
     {%  endif  %}
   </a>
 </div>
-</div>
 </section>
+</div>
+
 
 {% endfor %}
 </div>
+</div>
+{%  endif  %}

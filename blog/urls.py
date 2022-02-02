@@ -2,6 +2,9 @@ from django.urls import path
 
 from blog.feeds import LatestPostsFeed
 from .views import *
+
+#from django.contrib.auth 
+
  
 urlpatterns = [
     path('', indexhome, name='index-home'),
@@ -11,6 +14,9 @@ urlpatterns = [
     path('post/<str:slug>/', GetPost.as_view(), name='post'),
     path('search/', Search.as_view(), name='search'),
     path('feed/rss', LatestPostsFeed(), name='post_feed'),      #RSS
+    path('register/', register, name='register'),
+    path('login/', user_login, name='login'),
+    path('logout/', user_logout, name='logout'),
     ]
 
     #path('test/', tests),]

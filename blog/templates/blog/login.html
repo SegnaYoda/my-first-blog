@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{%   block title   %}
+Login :: {{ block.super }}
+{%    endblock    %}
+
+<!--
+{%   block sidebar   %}
+{% include 'inc/_sidebar.html' %}
+{%    endblock    %}
+-->
+
+{%   block content   %}
+<section id="blog">
+    <div class="container">
+         <div class="row">
+              <div class="col-md-offset-1 col-md-10 col-sm-12">
+
+<h1>Авторизация</h1>
+
+<form method="post">
+    {% csrf_token %} 
+
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-info btn-block">Login</button>
+
+
+</form>
+
+</div>
+</div>     
+</div>  
+     </section>
+
+{%    endblock    %}

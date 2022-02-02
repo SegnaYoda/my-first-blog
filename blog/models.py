@@ -3,6 +3,7 @@ from django.urls import reverse
 from distutils.command.upload import upload
 from django.db import models
 
+
 # Create your models here.
 
 class Category(models.Model):
@@ -20,7 +21,7 @@ class Category(models.Model):
         verbose_name_plural = 'Категории'
         ordering = ['title']
 
-    
+
 class Tag(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=50, verbose_name='Url', unique=True)
@@ -47,7 +48,6 @@ class Post(models.Model):
     views = models.IntegerField(default=0, verbose_name='Количество просмотров')
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='posts')
     tags = models.ManyToManyField(Tag, blank=True, related_name='posts')
-    #status = models.IntegerField(choices=STATUS, default=0)         # for RSS
 
     def __str__(self):
         return self.title

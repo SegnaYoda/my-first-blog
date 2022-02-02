@@ -1,8 +1,7 @@
 {%  extends 'base.html'  %}
 
 {%  load static %}
-
-
+{%  load sidebar %}
 {% load cache %}
 
 {% block title %}{{ title }}  ::   {{   block.super  }}{% endblock %}
@@ -60,10 +59,13 @@
                     <h4><span>{{ post.created_at }}</span></h4>
                </div>
                {%    endfor   %}
+          </div>  
 
-          </div>
+
+               {%  get_popular_single 1 %}
+        
      </div>
-               
+</div>      
      </section>
 
 {%   endblock   %}

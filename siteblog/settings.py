@@ -130,8 +130,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/static/'
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')    #сбор всей статики из приложений в одно место
+#STATIC_ROOT = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')    #сбор всей статики из приложений в одно место
 STATICFILES_DIRS = [    
     os.path.join(BASE_DIR, 'siteblog/static'),  
     ] #перечисленные пути для файлов статики
@@ -149,6 +149,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 INTERNAL_IPS = ["127.0.0.1"]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
+
+CKEDITOR_BASEPATH = "/static/ckeditor/"
 
 CKEDITOR_CONFIGS = {
     'default': {
@@ -173,7 +175,7 @@ CKEDITOR_CONFIGS = {
                        'Language']},
             {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
             {'name': 'insert',
-             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']},
+             'items': ['Image', 'Flash', 'Youtube', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']},
             '/',
             {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
             {'name': 'colors', 'items': ['TextColor', 'BGColor']},
@@ -184,6 +186,7 @@ CKEDITOR_CONFIGS = {
                 # put the name of your editor.ui.addButton here
                 'Preview',
                 'Maximize',
+
             ]},
         ],
         'toolbar': 'YourCustomToolbarConfig',  # put selected toolbar config here
@@ -199,10 +202,6 @@ CKEDITOR_CONFIGS = {
             'uploadimage', # the upload image feature
             # your extra plugins here
             'div',
-            'autolink',
-            'autoembed',
-            'embedsemantic',
-            'autogrow',
             # 'devtools',
             'widget',
             'lineutils',
@@ -210,9 +209,10 @@ CKEDITOR_CONFIGS = {
             'dialog',
             'dialogui',
             'elementspath',
-            ]),   
-        }     
+            'youtube'
+        ]),
     }
+}
 
 
 CACHES = {

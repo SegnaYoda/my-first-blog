@@ -18,7 +18,21 @@
               <a href="{% url 'index-home' %}" class="navbar-brand">Segnarock</a>
          </div>
          <div class="collapse navbar-collapse">
-         {%     show_menu   %}
+          {%     show_menu   %}
+
+
+          {% if request.user.is_authenticated %}
+               <li><a href="#">Добро пожаловать, {{ user.username }}</a></li>
+               <li><a href="{%  url 'logout' %}">Выход</a></li>
+          {%  else %}
+               <li><a href="{%  url 'register' %}">Регистрация</a></li>
+               <li><a href="{%  url 'login' %}">Авторизация</a></li>
+          {%  endif %}
+    </ul>
+</ul>
+
+
+
      </div>
  </div>
 </div>

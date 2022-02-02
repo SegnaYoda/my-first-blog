@@ -3,11 +3,12 @@ from tkinter.filedialog import SaveAs
 from django.contrib import admin
 
 # Register your models here.
-
+from django.forms import fields
 from .models import *
 from django import forms
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django.utils.safestring import mark_safe
+from .models import Post, Category, Tag
 
 
 class PostAdminForm(forms.ModelForm):   #редактирование контента пользвателю из сайта
@@ -22,7 +23,7 @@ class PostAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
     form = PostAdminForm
     save_as = True      #позвоялет сохранить состояние введенной ранее новости
-    save_on_top = True
+    save_on_top = True  #дублирует панель сохранения в вверх
     list_display = ('id', 'author', 'title', 'slug', 'category', 'created_at', 'get_photo')
     list_display_links = ('id', 'title')
     search_fileds = ('title', 'author' )
@@ -30,12 +31,13 @@ class PostAdmin(admin.ModelAdmin):
     readonly_fields = ('views', 'created_at', 'get_photo')
     fields = ('title', 'slug', 'author', 'category', 'tags', 'content', 'photo', 'get_photo', 'views', 'created_at')
 
-    def get_photo(self, obj):
+    def get_photo(self, obj):       #показ изображения статьи в админке
         if obj.photo:
             return mark_safe(f'<img src="{obj.photo.url}" width="50" >')
         return '-'
     
     get_photo.short_description = 'Фото'
+
 
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}

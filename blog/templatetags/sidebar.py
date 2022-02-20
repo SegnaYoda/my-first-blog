@@ -11,7 +11,7 @@ def get_popular(cnt=3):
 
 
 @register.inclusion_tag('blog/tags_tpl.html')
-def get_tags(cnt=30):
+def get_tags(cnt=40):
     tags = Tag.objects.all()[:cnt]
     return {"tags": tags}
 

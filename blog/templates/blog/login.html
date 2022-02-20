@@ -14,24 +14,22 @@
 <section id="blog">
     <div class="container">
          <div class="row">
-              <div class="col-md-offset-1 col-md-10 col-sm-12">
+                         <div class="col-md-offset-2 col-md-7 col-sm-6">
 
 <h1>Авторизация</h1>
+                    <div class="blog-comment-form">
+                         <form method="post">
+                              {% csrf_token %} 
+                              {{ form.as_p }}
+                              <div class="col-md-3 col-sm-4">
+                                   <input name="submit" type="submit" class="form-control" id="submit" value="Авторизация">
+                         </div>
+                         </form>
+               </div>
 
-<form method="post">
-    {% csrf_token %} 
-
-    {{ form.as_p }}
-    
-    <button type="submit" class="btn btn-info btn-block">Login</button>
-    
-
-
-</form>
-
-</div>
+          </div>
+     </div>
 </div>     
-</div>  
      </section>
 
 {%    endblock    %}

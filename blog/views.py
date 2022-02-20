@@ -1,8 +1,11 @@
 from unicodedata import category
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
 # Create your views here.
-from .forms import UserRegisterForm, UserLoginForm, PostForm
+from .forms import CommentForm, UserRegisterForm, UserLoginForm, PostForm
 from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic.edit import FormMixin
 from .models import Post, Category, Tag
 from .utils import MyMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,6 +13,17 @@ from django.contrib import messages
 from django.db.models import F  #поможет высчиатать корректно количество просмотров
 from django.contrib.auth import login, logout
 
+
+
+
+class CustomSuccessMessageMixin:
+    @property
+    def success_msg(self):
+        return False
+    
+    def form_valid(self, form):
+        messages.success(self.request, self.success_msg)
+        return super().form_valid(form)
 
 
 def user_logout(request):
@@ -87,10 +101,15 @@ class PostsByTag(ListView):
             return context
 
 
-class GetPost(DetailView):
+class GetPost(CustomSuccessMessageMixin, FormMixin, DetailView):
         model = Post
         template_name = 'blog/single.html'
         context_object_name = 'post'
+        form_class = CommentForm
+        success_msg = 'Комментарий отправлен.'      # вывод об успехе отправки коммента
+        
+        def get_success_url(self, **kwargs):    # обновление страницы
+            return reverse_lazy('post', kwargs={'slug': self.get_object().slug} )
 
         def get_context_data(self, *, object_list=None, **kwargs):
             context = super().get_context_data(**kwargs)
@@ -98,20 +117,34 @@ class GetPost(DetailView):
             self.object.save()
             self.object.refresh_from_db()
             return context
+        
+        def post(self, request, *args, **kwargs):
+            form = self.get_form()
+            if form.is_valid():
+                return self.form_valid(form)
+            else: 
+                return self.form_invalid(form) 
+
+        def form_valid(self, form):
+            self.object = form.save(commit=False)
+            self.object.post = self.get_object()
+            self.object.author = self.request.user
+            self.object.save()
+            return super().form_valid(form)
 
 
 class Search(ListView):
-        template_name = 'blog/search.html'
-        context_object_name = 'posts'
-        paginate_by = 3
+    template_name = 'blog/search.html'
+    context_object_name = 'posts'
+    paginate_by = 3
 
-        def get_queryset(self):
-            return Post.objects.filter(title__icontains=self.request.GET.get('s'))    # icontains - латиница без учетом регистра, а кириллица с учетом
+    def get_queryset(self):
+        return Post.objects.filter(title__icontains=self.request.GET.get('s'))    # icontains - латиница без учетом регистра, а кириллица с учетом
 
-        def get_context_data(self, *, object_list=None, **kwargs):
-            context = super().get_context_data(**kwargs)
-            context['s'] = f"s={self.request.GET.get('s')}&"
-            return context
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['s'] = f"s={self.request.GET.get('s')}&"
+        return context
 
 
 class CreatePost(LoginRequiredMixin, CreateView):

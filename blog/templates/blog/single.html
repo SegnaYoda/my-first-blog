@@ -56,7 +56,7 @@
                          <div class="blog-post-format">
                               <span><a href="#"><img src="{%  static 'images/avatar1.jpg' %}" class="img-responsive img-circle"> {{ post.author }}</a></span>
                               <span><i class="fa fa-date"></i> {{ post.created_at }}</span>
-                              <span><a href="#"><i class="fa fa-comment-o"></i> 124 Comments</a></span>
+                              <span><a href="#comments"><i class="fa fa-comment-o"></i> {{   post.comments_post.all.count }} комментарий(я)</a></span>
                          </div>
                          
                          <div class="blog-post-format"><span>
@@ -83,7 +83,7 @@
                          <div class="blog-author">
                               <div class="media">
                                    <div class="media-object pull-left">
-                                        <a href="#"><img src="{%  static 'images/avatar1.jpg' %}" class="img-responsive img-circle">
+                                        <a href="#"><img src="{%  static 'images/avatar1.jpg' %}" class="img-responsive img-circle"></a>
                                    </div>
                                    <div class="media-body">
                                         <h3 class="media-heading"><a href="#">{{ post.author }}</a></h3>
@@ -92,50 +92,101 @@
                               </div>
                          </div>
 
-                         <div class="blog-comment">
-                              <h3>Комментарии</h3>
-                                   <div class="media">
-                                        <div class="media-object pull-left">
-                                             <a href="#"><img src="{%  static 'images/avatar1.jpg' %}" class="img-responsive img-circle">
-                                        </div>
-                                        <div class="media-body">
-                                             <h3 class="media-heading">David Jones</h3>
-                                             <span>3 дня назад</span>
-                                             <p>Тестовый текст</p>
-                                        </div>
-                                   </div>
-                                   <div class="media">
-                                        <div class="media-object pull-left">
-                                             <a href="#"><img src="{%  static 'images/avatar1.jpg' %}" class="img-responsive img-circle">
-                                        </div>
-                                        <div class="media-body">
-                                             <h3 class="media-heading">Omar Larus</h3>
-                                             <span>5 дней назад</span>
-                                             <p>Тестовый текст</p>
-                                        </div>
-                                   </div>
-                                   <div class="media">
-                                        <div class="media-object pull-left">
-                                             <a href="#"><img src="{%  static 'images/avatar1.jpg' %}" class="img-responsive img-circle">
-                                        </div>
-                                        <div class="media-body">
-                                             <h3 class="media-heading">Walker Jen</h3>
-                                             <span>27 Июля, 2021</span>
-                                             <p>Тестовый текст</p>
-                                        </div>
-                                   </div>
-                                   <div class="media">
-                                        <div class="media-object pull-left">
-                                             <a href="#"><img src="{%  static 'images/avatar1.jpg' %}" class="img-responsive img-circle">
-                                        </div>
-                                        <div class="media-body">
-                                             <h3 class="media-heading">Jen Lopez</h3>
-                                             <span>24 июля, 2021</span>
-                                             <p>Тестовый текст</p>
-                                        </div>
-                                   </div>
-                         </div>
+                        </div>
 
+                                        
+             
+                        
+
+          <!--    Comments             -->
+
+                                   
+                             
+
+
+     <div class="blog-comment">
+          <a name="comments"></a>
+          <h3>Комментарии</h3>
+          <div><span><a href="#comments"><i class="fa fa-comment-o"></i> {{   post.comments_post.all.count }} комментарий(я)</a></span></div>
+          <br>
+          <div>{{   post.comments_post.all }}</div>
+         
+          {%  for item in post.comments_post.all %}
+          <div class="media">
+               <div class="media-object pull-left">
+                    <a href="#"><img src="{%  static 'images/avatar1.jpg' %}" class="img-responsive img-circle"></a>
+               </div> 
+               <div class="media-body">
+                    <h3 class="media-heading">{{   item.author   }}</h3>
+                    <span>{{   item.created_at }}</span>
+                    
+                    <p> {{   item.body }}</p>
+                    
+               </div></div>
+              
+          {%  endfor  %}             
+                      
+          
+
+
+<!-- Message Section -->
+{%  if messages %}
+  <div class="container">
+       <div class="row">
+            <div class="col-md-offset-1 col-md-10 col-sm-12">
+<div class="blog-post-title">
+
+         {%  for message in messages %}
+           {%  if message.tags == "error" %}
+           <br>
+           <h4><div class="alert alert-danger" role="alert">{{ message }}</div></h4>
+           {%  else  %}
+           <h4><div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div></h4>
+           {%  endif %}
+         {%  endfor  %}
+</div>
+</div>
+</div>     
+</div>  
+{%  endif  %}
+
+
+
+
+          <!-- Comment_Button Section -->
+          <div class="blog-comment-form">
+               <hr>
+               <h3>Оставьте комментарий</h3>
+               <form method="post">
+               {% csrf_token %}
+               {{ form.as_p }}
+       <!--              <input type="text" class="form-control" placeholder="Имя" name="name" required>
+                         <input type="email" class="form-control" placeholder="Email" name="email" required>           
+                         <textarea name="message" rows="5" class="form-control field-body" id="message" placeholder="Сообщение" message="message" required="required"></textarea>  -->
+               
+                         <div class="col-md-3 col-sm-4">
+                    <input name="submit" type="submit" class="form-control" id="submit" value="Оставить">
+               </div>
+<br>
+<br>
+    
+</form>
+     </div>
+
+
+
+
+                   
+
+
+
+
+
+
+
+
+     </div>
+<!--
                          <div class="blog-comment-form">
                               <h3>Оставьте комментарий</h3>
                                    <form action="#" method="post">
@@ -147,6 +198,13 @@
                                         </div>
                                    </form>
                          </div>
+-->
+
+
+
+
+ <!--   END                    Comments             -->
+
                     </div>
           </div>
      
@@ -155,27 +213,28 @@
 
 
  
+
+
 <div class="col-md-4">
-    
-    
      <div class="blog-comment-form">
-          <a href="javascript: void 0">
+          
                <h3>Поиск</h3>
                <form action="{%  url 'search' %}" method="get">
                     <input type="text" class="form-control" placeholder="Поиск..." name="s" required>
-               </form></a>
+               </form>
           </div>
-   
+          <hr>
      {%   get_popular 3 %}
-   
+     <hr>
      {%   get_tags %}
    
-</div>
-</div>
-</div>
-</div>
-</div>
 
+
+
+</div>
+</div>
+</div>
+</div>
 </section>
 
 {%   endblock  %}

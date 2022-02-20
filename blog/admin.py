@@ -56,12 +56,12 @@ class UserProfileAdminForm(forms.ModelForm):   #редактирование к�
 class UserProfileAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("user",)}
     save_on_top = True  #дублирует панель сохранения в вверх
-    list_display = ('id', 'user', 'slug', 'get_avatar', 'author') 
+    list_display = ('id', 'user', 'slug', 'get_avatar', 'author', 'description') 
     list_display_links = ('id', 'user', 'get_avatar')
     search_fileds = ('user', 'author' )
     list_filter = ('author',)
     readonly_fields = ('get_avatar',) # обязательно read only режим
-    fields = ('user', 'slug', 'avatar', 'get_avatar', 'author') # Указываем поля, которые нужно отобразить в административной форме при создании нового автора
+    fields = ('user', 'slug', 'avatar', 'get_avatar', 'author', 'description') # Указываем поля, которые нужно отобразить в административной форме при создании нового автора
 
     def get_avatar(self, obj):       
         if obj.avatar:
@@ -71,13 +71,13 @@ class UserProfileAdmin(admin.ModelAdmin):
     get_avatar.short_description = 'Аватар'
 
 
-'''@admin.register(Comment) #альтернатива регистрации admin.site.register(Comment, CommentAdmin)
+@admin.register(Comment) #альтернатива регистрации admin.site.register(Comment, CommentAdmin)
 class CommentAdmin(admin.ModelAdmin):  
     save_on_top = True
-    list_display = ('name', 'email', 'post', 'body', 'created_at', 'updated_at', 'moderation')  
-    list_filter = ('moderation', 'created_at', 'updated') 
+    list_display = ('name', 'author', 'email', 'post', 'body', 'created_at', 'updated_at', 'moderation')  
+    list_filter = ('moderation', 'author', 'created_at', 'updated_at') 
     list_display_links =  ('name', 'email')
-    search_fields = ('name', 'email', 'body')'''
+    search_fields = ('name', 'email', 'author', 'body')
 
 
 admin.site.register(Category, CategoryAdmin)   #регистрация приложения в проекте

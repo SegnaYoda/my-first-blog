@@ -1,6 +1,6 @@
 from django import forms
-from django.forms import fields
-from .models import Post
+from django.forms import Textarea, fields
+from .models import Post, Comment
 import re
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm #авторизация и аутентификация
@@ -58,3 +58,39 @@ class PostForm(forms.ModelForm):
         if re.match(r'\d', title):   #поиск в строке title цифр. Используется бибилиотека regular expression
             raise ValidationError('Название не должно начинаться с цифры')       #возбуждение ошибки из библиотеки django.core.exception
         return title
+
+
+class CommentForm(forms.ModelForm):  
+    class Meta:  
+       model = Comment  
+       fields = ['body', ]  #лучше самостоятельно перечислить поля
+       widgets = {
+            'body': forms.Textarea(attrs={"class": "form-control", 'rows': 5, 'placeholder' : "Комментарий", 'message' : "message"}),
+            #'title': forms.TextInput(attrs={"class": "form-control"}),
+            #'category': forms.Select(attrs={"class": "form-control"})
+        }
+       labels = {
+            'body': '',}
+       #help_texts = {
+        #    'body': 'Количество символов ограничено 400 знаков.',}
+       error_messages = {
+            'body': {
+                'max_length': "Количество символов превышает 400 знаков.",
+            },
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        #for field in self.fields:
+        #    self.fields[field].widget.attrs['class'] = 'form-control'
+        #self.fields['body'].widget = Textarea(attrs={'row': 5})
+
+
+
+    '''
+    def clean_title(self):      #кастомный/пользовательский валидатор, self - объект данного класса
+        title = self.cleaned_data['title']      #словарь с данными, где ключ 'title'
+        if re.match(r'\d', title):   #поиск в строке title цифр. Используется бибилиотека regular expression
+            raise ValidationError('Название не должно начинаться с цифры')       #возбуждение ошибки из библиотеки django.core.exception
+        return title
+    '''

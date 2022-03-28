@@ -54,7 +54,7 @@
                     </div>
 
                          <div class="blog-post-format">
-                              <span><a href="#"><img src="{%  static 'images/avatar1.jpg' %}" class="img-responsive img-circle"> {{ post.author }}</a></span>
+                              <span><a href="#"><img src="{{   post.author.avatar.url }}" class="img-responsive img-circle"> {{   post.author.author }}</a></span>
                               <span><i class="fa fa-date"></i> {{ post.created_at }}</span>
                               <span><a href="#comments"><i class="fa fa-comment-o"></i> {{   post.comments_post.all.count }} комментарий(я)</a></span>
                          </div>
@@ -78,16 +78,16 @@
 
                          <div class="blog-post-des">
                               <p>{{post.content | safe }}</p>
-                              <blockquote>Тестовый текст</blockquote>
+                              
 
                          <div class="blog-author">
                               <div class="media">
                                    <div class="media-object pull-left">
-                                        <a href="#"><img src="{%  static 'images/avatar1.jpg' %}" class="img-responsive img-circle"></a>
+                                        <a href="#"><img src="{{   post.author.avatar.url }}" class="img-responsive img-circle"></a>
                                    </div>
                                    <div class="media-body">
-                                        <h3 class="media-heading"><a href="#">{{ post.author }}</a></h3>
-                                        <p>Описание автора</p>
+                                        <h3 class="media-heading"><a href="#">{{   post.author.author }}</a></h3>
+                                        <p>{{   post.author.description }}</p>
                                    </div>
                               </div>
                          </div>
@@ -109,21 +109,24 @@
           <h3>Комментарии</h3>
           <div><span><a href="#comments"><i class="fa fa-comment-o"></i> {{   post.comments_post.all.count }} комментарий(я)</a></span></div>
           <br>
-          <div>{{   post.comments_post.all }}</div>
          
           {%  for item in post.comments_post.all %}
+          
           <div class="media">
                <div class="media-object pull-left">
-                    <a href="#"><img src="{%  static 'images/avatar1.jpg' %}" class="img-responsive img-circle"></a>
+                    <a href="#"><img src="{{   item.author.avatar.url }}" class="img-responsive img-circle"></a>
                </div> 
                <div class="media-body">
-                    <h3 class="media-heading">{{   item.author   }}</h3>
+                    <h3 class="media-heading">{{   item.author.user.first_name   }} {{   item.author.user.last_name   }}</h3>
                     <span>{{   item.created_at }}</span>
-                    
+                    {%   if item.moderation %}
                     <p> {{   item.body }}</p>
-                    
+                    {%  else %}
+                    <p style="color:#9f0a0a">Комментарий не прошел модерацию.</p>
+                    {%   endif  %}
                </div></div>
-              
+          
+               
           {%  endfor  %}             
                       
           
@@ -131,6 +134,8 @@
 
 <!-- Message Section -->
 {%  if messages %}
+<div class="media">
+     <div class="media-object pull-left">
   <div class="container">
        <div class="row">
             <div class="col-md-offset-1 col-md-10 col-sm-12">
@@ -146,8 +151,9 @@
          {%  endfor  %}
 </div>
 </div>
-</div>     
-</div>  
+</div>  </div>   
+</div> </div>     
+  
 {%  endif  %}
 
 
@@ -156,6 +162,7 @@
           <!-- Comment_Button Section -->
           <div class="blog-comment-form">
                <hr>
+               {% if request.user.is_authenticated %}
                <h3>Оставьте комментарий</h3>
                <form method="post">
                {% csrf_token %}
@@ -171,6 +178,10 @@
 <br>
     
 </form>
+{%   else   %}
+<blockquote>Чтобы оставить комментарий <a href="{%  url 'login' %}">войдите</a> на сайт или <a href="{%  url 'register' %}">зарегиструйтесь</a></blockquote>
+{%   endif     %}
+
      </div>
 
 

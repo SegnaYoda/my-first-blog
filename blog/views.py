@@ -6,13 +6,14 @@ from django.urls import reverse_lazy
 from .forms import CommentForm, UserRegisterForm, UserLoginForm, PostForm
 from django.views.generic import ListView, DetailView, CreateView
 from django.views.generic.edit import FormMixin
-from .models import Post, Category, Tag
+from .models import Post, Category, Tag, UserProfile
 from .utils import MyMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.db.models import F  #поможет высчиатать корректно количество просмотров
+from django.db.models import F  # поможет высчиатать корректно количество просмотров
 from django.contrib.auth import login, logout
-
+from django.contrib.auth.models import User
+from .forms import PostEditForm
 
 
 
@@ -20,7 +21,7 @@ class CustomSuccessMessageMixin:
     @property
     def success_msg(self):
         return False
-    
+
     def form_valid(self, form):
         messages.success(self.request, self.success_msg)
         return super().form_valid(form)
@@ -32,105 +33,116 @@ def user_logout(request):
 
 
 def register(request):
-    if request.method == 'POST':    #проверка - пришел ли запрос страницы методом POST
-        form = UserRegisterForm(request.POST)   #связываем с формой
-        if form.is_valid():     #валидация формы, проверка на подлинность
-            user = form.save()     #сохраняем пользователя и передаем в переменную user
-            login(request, user)    #авторизуем, передавая request и данные пользователя
+    if request.method == 'POST':  # проверка - пришел ли запрос страницы методом POST
+        form = UserRegisterForm(request.POST)  # связываем с формой
+        if form.is_valid():  # валидация формы, проверка на подлинность
+            user = form.save()  # сохраняем пользователя и передаем в переменную user
+            # авторизуем, передавая request и данные пользователя
+            login(request, user)
             messages.success(request, 'Вы успешно прошли регистрацию')
             return redirect('home')
         else:
             messages.error(request, 'Ошибка регистрации')
     else:
-        form = UserRegisterForm()   #если страница запрошена методом GET,то создаем экземпляр формы, не связанный с данными 
-    return render(request, 'blog/register.html', {'form': form})    # {'form': form} передаем контекст в переменную form
+        # если страница запрошена методом GET,то создаем экземпляр формы, не связанный с данными
+        form = UserRegisterForm()
+    # {'form': form} передаем контекст в переменную form
+    return render(request, 'blog/register.html', {'form': form})
 
 
 def user_login(request):
-    if request.method == 'POST':    #проверка - пришел ли запрос страницы методом POST
-        form = UserLoginForm(data=request.POST)   #в данном случае просто передать данные не выйдет, необходимо назначить переменную, в которую поместим эти данные
-        if form.is_valid():     #валидация формы, проверка на подлинность
+    if request.method == 'POST':  # проверка - пришел ли запрос страницы методом POST
+        # в данном случае просто передать данные не выйдет, необходимо назначить переменную, в которую поместим эти данные
+        form = UserLoginForm(data=request.POST)
+        if form.is_valid():  # валидация формы, проверка на подлинность
             user = form.get_user()
             login(request, user)
             messages.success(request, 'Вы успешно авторизовались')
             return redirect('home')
     else:
-        form = UserLoginForm() #если страница запрошена методом GET,то создаем экземпляр формы, не связанный с данными
-    return render(request, 'blog/login.html', {'form': form})   # {'form': form} передаем контекст в переменную form
+        # если страница запрошена методом GET,то создаем экземпляр формы, не связанный с данными
+        form = UserLoginForm()
+    # {'form': form} передаем контекст в переменную form
+    return render(request, 'blog/login.html', {'form': form})
 
 
 class Home(ListView):
-        model = Post
-        template_name = 'blog/index.html'
-        context_object_name = 'posts'
-        paginate_by = 3         #количество статей на одной сранице
+    model = Post
+    template_name = 'blog/index.html'
+    context_object_name = 'posts'
+    paginate_by = 3  # количество статей на одной сранице
 
-        def get_context_data(self, *, object_list=None, **kwargs):
-            context = super().get_context_data(**kwargs)
-            context['title'] = 'Мой сайт'
-            return context
+    def get_queryset(self):
+        return Post.objects.filter(is_published=True).select_related('author', 'category')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Главная страница'
+        return context
 
 
 class PostsByCategory(ListView):
-        template_name = 'blog/indexCategory.html'
-        context_object_name = 'posts'
-        paginate_by = 3
-        allow_empty = False             #при запросе пустой категории выводило ошибку 404
+    template_name = 'blog/indexCategory.html'
+    context_object_name = 'posts'
+    paginate_by = 3
+    allow_empty = False  # при запросе пустой категории выводило ошибку 404
 
-        def get_queryset(self):
-            return Post.objects.filter(category__slug=self.kwargs['slug'])
+    def get_queryset(self):
+        return Post.objects.filter(category__slug=self.kwargs['slug'], is_published=True).select_related('author', 'category')
 
-        def get_context_data(self, *, object_list=None, **kwargs):
-            context = super().get_context_data(**kwargs)
-            context['title'] = 'Статьи по категории: ' + str(Category.objects.get(slug=self.kwargs['slug']))
-            return context
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Статьи по категории: ' + \
+            str(Category.objects.get(slug=self.kwargs['slug']))
+        return context
 
 
 class PostsByTag(ListView):
-        template_name = 'blog/indexCategory.html'
-        context_object_name = 'posts'
-        paginate_by = 3
-        allow_empty = False             #при запросе пустой категории выводило ошибку 404
+    template_name = 'blog/indexCategory.html'
+    context_object_name = 'posts'
+    paginate_by = 3
+    allow_empty = False  # при запросе пустой категории выводило ошибку 404
 
-        def get_queryset(self):
-            return Post.objects.filter(tags__slug=self.kwargs['slug'])
+    def get_queryset(self):
+        return Post.objects.filter(tags__slug=self.kwargs['slug'], is_published=True).select_related('author', 'category')
 
-        def get_context_data(self, *, object_list=None, **kwargs):
-            context = super().get_context_data(**kwargs)
-            context['title'] = 'Статьи по тегу: ' + str(Tag.objects.get(slug=self.kwargs['slug']))
-            return context
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Статьи по тегу: ' + \
+            str(Tag.objects.get(slug=self.kwargs['slug']))
+        return context
 
 
 class GetPost(CustomSuccessMessageMixin, FormMixin, DetailView):
-        model = Post
-        template_name = 'blog/single.html'
-        context_object_name = 'post'
-        form_class = CommentForm
-        success_msg = 'Комментарий отправлен.'      # вывод об успехе отправки коммента
-        
-        def get_success_url(self, **kwargs):    # обновление страницы
-            return reverse_lazy('post', kwargs={'slug': self.get_object().slug} )
+    model = Post
+    template_name = 'blog/single.html'
+    context_object_name = 'post'
+    form_class = CommentForm
+    success_msg = 'Комментарий отправлен.'      # вывод об успехе отправки коммента
 
-        def get_context_data(self, *, object_list=None, **kwargs):
-            context = super().get_context_data(**kwargs)
-            self.object.views = F('views') + 1
-            self.object.save()
-            self.object.refresh_from_db()
-            return context
-        
-        def post(self, request, *args, **kwargs):
-            form = self.get_form()
-            if form.is_valid():
-                return self.form_valid(form)
-            else: 
-                return self.form_invalid(form) 
+    def get_success_url(self, **kwargs):    # обновление страницы
+        return reverse_lazy('post', kwargs={'slug': self.get_object().slug})
 
-        def form_valid(self, form):
-            self.object = form.save(commit=False)
-            self.object.post = self.get_object()
-            self.object.author = self.request.user
-            self.object.save()
-            return super().form_valid(form)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        self.object.views = F('views') + 1
+        self.object.save()
+        self.object.refresh_from_db()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.post = self.get_object()
+        self.object.author = UserProfile.objects.get(user=self.request.user)
+        self.object.save()
+        return super().form_valid(form)
 
 
 class Search(ListView):
@@ -139,26 +151,48 @@ class Search(ListView):
     paginate_by = 3
 
     def get_queryset(self):
-        return Post.objects.filter(title__icontains=self.request.GET.get('s'))    # icontains - латиница без учетом регистра, а кириллица с учетом
+        # icontains - латиница без учетом регистра, а кириллица с учетом
+        return Post.objects.filter(title__icontains=self.request.GET.get('s'), is_published=True).select_related('author', 'category')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['s'] = f"s={self.request.GET.get('s')}&"
+        context['result'] = self.request.GET.get('s')
         return context
 
 
-class CreatePost(LoginRequiredMixin, CreateView):
-    form_class = PostForm   #связывает данный класс CreateNews с классом формы BlogForm 
-    template_name = 'blog/add_news.html'    #указываем существующий template
-    # success_url = reverse_lazy('home')      #происходит редирект на главную страницу после добавления новости
-    # reverse_lazy в отличии от reverse вызывается после того, как Джанго узнает о существовании маршрута 'home', поэтому не генерит ошибок
-    login_url = '/admin'    # 1 способ. Для неавторизованных пользователей ресурс перенаправит на страницу авторизования
-    #raise_exception = True     # 2 способ. Для неавторизованных пользователей выдаст ошибку "403 Forbidden"
+def indexhome(request):  # контроллер функции стартовой страницы
+    return render(request, 'blog/index-home.html')
 
 
-def indexhome(request):  #контроллер функции стартовой страницы
-        return render(request, 'blog/index-home.html')
+def personalaccount(request):  # контроллер функции стартовой страницы
+    return render(request, 'blog/personalaccount.html')
 
 
-def get_category(request, slug):        #тестовый вывод страницы
-        return render(request, 'blog/category.html')
+def get_category(request, slug):
+    return render(request, 'blog/category.html')
+
+
+def rssfeed(request):
+    return render(request, 'blog/rss-parsing.html')
+
+
+
+def add_post(request):
+    post_form= PostEditForm(request.POST)
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():     #прошла ли форма валидацию
+            object = form.save(commit=False)
+            object.author = UserProfile.objects.get(user=request.user)
+            object.save()
+            img_obj = form.instance
+            context = {"img_obj": img_obj}
+            return redirect('home')
+    else:
+        form = PostForm()
+    context = {
+        "form": form,
+        "post_form" : post_form, }
+    return render(request, 'blog/add_post.html', context)
+

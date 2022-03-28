@@ -1,0 +1,42 @@
+<div class="col-md-offset-1 col-md-10 col-sm-12">
+     <div class="media">
+   <div class="col-md-4 col-sm-4">
+     <br>
+     <br>
+     <div class="gallery-thumb">
+     <img src="{{ userinfo.avatar.url }}" alt="{{ userinfo.user }}" class="img-responsive img-circle" >
+     <br>
+</div></div>
+   
+
+<div class="col-md-8 col-sm-8">
+     <div class="blog-post-title">
+          
+          <h2>Пользователь {{ userinfo.user }}</h2>
+          <hr>
+     </a> 
+      </div>   
+
+      
+<div class="col-md-6 col-sm-6">               
+     Имя: {{ userinfo.user.first_name }} </p>
+     <p>Фамилия: {{ userinfo.user.last_name }}</p>
+     <p>Псевдоним: {{ userinfo.author }}</p>
+     <p>Е-mail: {{ userinfo.user.email }}</p>
+   </div>
+
+   <div class="col-md-6 col-sm-6">
+     <p>Последний вход: </p><p>{{ userinfo.user.last_login}}</p>
+     <p>Дата регистрации: </p><p>{{ userinfo.user.date_joined }}</p>
+</div>
+
+
+<div class="col-md-8 col-sm-8">
+     <hr>
+<h4>Описание: </h4><p>{{ userinfo.description|safe|linebreaks }}</p>
+<p>Вы с нами уже {{ userinfo.user.date_joined|timesince }}</p>
+</div>
+</div>
+   </div> 
+   <hr>
+</div>

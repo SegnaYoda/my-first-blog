@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{%   block title   %}
+Добавить пост :: {{ block.super }}
+{%    endblock    %}
+
+
+{%   block content   %}
+<section id="blog">
+    <div class="container">
+         <div class="row">
+                         <div class="col-md-offset-2 col-md-7 col-sm-6">
+
+<h1>Добавление новости</h1>
+<div class="blog-comment-form">
+     {% if request.user.is_authenticated %}
+<form method="post" action="/add-post/" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}  
+    {{ post_form.media }}
+    <input name="submit" type="submit" class="form-control" id="submit" value="Добавить">
+</form>
+     {%   else   %}
+     <blockquote>Чтобы добавить новость <a href="{%  url 'login' %}">войдите</a> на сайт или <a href="{%  url 'register' %}">зарегиструйтесь</a></blockquote>
+     {%   endif     %}
+</div>
+
+
+
+
+              
+        
+
+
+
+
+
+
+
+
+
+          </div>
+     </div>
+</div>     
+     </section>
+
+{%    endblock    %}

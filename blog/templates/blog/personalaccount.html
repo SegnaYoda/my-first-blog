@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{%  load static %}
+{% load userprofileinfo %}
+
+
+{%   block title   %}
+Профиль {{ user.username }}:: {{ block.super }}
+{%    endblock    %}
+
+{%   block content   %}
+<!-- Home Section -->
+
+     <div class="container">
+          <div class="row">
+
+               <div class="col-md-offset-1 col-md-10 col-sm-12">
+                    <br>
+                    <br>
+               </div>
+
+<!-- Данные пользователя-->
+
+      {% get_userinfo user.id %}
+     </div>
+</div>
+
+<!-- ******************************-->
+
+ 
+{% if request.user.is_authenticated %}
+<section id="gallery">
+<div class="container">
+     <div class="row">
+<div class="col-md-offset-1 col-md-10 col-sm-3">
+     
+                    
+                    <div class="col-md-3 col-sm-3">
+                     <div class="gallery-thumb">
+                              <a href="{% url 'index_chat' %}" class="image-popup">
+                                   <img src="{%  static 'images/chat.png' %}" class="img-responsive" alt="Gallery Image">
+                                   <center><h3>Чат</h3></center>
+                                        </a></div></div>
+
+                    <div class="col-md-3 col-sm-3">
+                    <div class="gallery-thumb">
+                              <a href="#" class="image-popup">
+                                   <img src="{%  static 'images/friends.png' %}" class="img-responsive" alt="Gallery Image">
+                                   <center><h3>Контакты</h3></center>
+                                        </a></div></div>
+                                            
+                    <div class="col-md-3 col-sm-3">
+                         <div class="gallery-thumb">
+                              <a href="{%  url 'add_post' %}" class="image-popup">
+                                   <img src="{%  static 'images/createpost.png' %}" class="img-responsive"  alt="Gallery Image" >
+                                  <center><h3>Добавить пост</h3></center>
+							  </a></div></div>
+                    
+                    <div class="col-md-3 col-sm-3">
+                         <div class="gallery-thumb">
+                              <a href="{% url 'rssfeed' %}" class="image-popup">
+                                   <img src="{%  static 'images/rss.png' %}" class="img-responsive" alt="Gallery Image">
+                                   <h3><center>Подписки RSS</center></h3>
+							  </a></div></div>
+
+{%   endif   %}
+<!-- ******************************-->    
+               
+          </div>
+     </div>
+</div>
+</section>
+{%   endblock   %}

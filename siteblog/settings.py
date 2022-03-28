@@ -39,10 +39,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #'django.contrib.sites',
     'debug_toolbar',
     'ckeditor',
+    'tinymce',
     'captcha',
     'blog.apps.BlogConfig',
+    
+    'chat',
+    'channels', # Channels
 ]
 
 MIDDLEWARE = [
@@ -84,17 +89,35 @@ WSGI_APPLICATION = 'siteblog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': '0000',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
-'''{   'default': {
+'''
+# SQlite 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        'TEST': {
+            'NAME': os.path.join(BASE_DIR, 'db_test.sqlite3')
+        }
+    }
+}
+
+# MySQL
+{   'default': {
     'ENGINE': 'django.db.backends.mysql',
     'NAME': 'DjangoSQL1',
     'USER': 'root',
     'PASSWORD': '0000',
-    'HOST': 'localhost'    } }'''
+    'HOST': 'localhost'    } }
+    '''
     
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -149,9 +172,41 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 INTERNAL_IPS = ["127.0.0.1"]
 
+TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "path/to/tiny_mce")
+
+TINYMCE_DEFAULT_CONFIG = {
+    "height": "320px",
+    "width": "960px",
+    "menubar": "file edit view insert format tools table help",
+    "plugins": "advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code "
+    "fullscreen insertdatetime media table paste code help wordcount spellchecker",
+    "toolbar": "undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft "
+    "aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor "
+    "backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | "
+    "fullscreen  preview save print | insertfile image media pageembed template link anchor codesample | "
+    "a11ycheck ltr rtl | showcomments addcomment code",
+    #"custom_undo_redo_levels": 50,
+    "language": "ru",  # To force a specific language instead of the Django current language.
+}
+
+TINYMCE_SPELLCHECKER = True
+
+TINYMCE_COMPRESSOR = True
+
+TINYMCE_EXTRA_MEDIA = {
+    'css': {
+        'all': [
+            ...
+        ],
+    },
+    'js': [
+        ...
+    ],
+}
+
+
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
-CKEDITOR_BASEPATH = "/static/ckeditor/"
 
 CKEDITOR_CONFIGS = {
     'default': {
@@ -176,7 +231,7 @@ CKEDITOR_CONFIGS = {
                        'Language']},
             {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
             {'name': 'insert',
-             'items': ['Image', 'Flash', 'Youtube', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']},
+             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']},
             '/',
             {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
             {'name': 'colors', 'items': ['TextColor', 'BGColor']},
@@ -203,17 +258,17 @@ CKEDITOR_CONFIGS = {
             'uploadimage', # the upload image feature
             # your extra plugins here
             'div',
+            'autolink',
+            'autoembed',
+            'embedsemantic',
+            'autogrow',
             # 'devtools',
             'widget',
             'lineutils',
             'clipboard',
             'dialog',
             'dialogui',
-            'elementspath',
-            'youtube'
-        ]),
-    }
-}
+            'elementspath'    ]),   }     }
 
 
 CACHES = {
@@ -222,3 +277,16 @@ CACHES = {
         'LOCATION': os.path.join(BASE_DIR, 'django_cache'),    
         }   
     }
+
+
+
+ASGI_APPLICATION = "siteblog.asgi.application"      # Channels
+
+CHANNEL_LAYERS = {                  # Channels
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}

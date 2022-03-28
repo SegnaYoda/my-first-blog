@@ -1,6 +1,7 @@
+{%  load static %}
 <ul class="{{ menu_class }}">
     <ul class="nav navbar-nav navbar-right">
-        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'home' %}">Домой</a></li>
         {% for item in categories %}
         <li><a href="{{ item.get_absolute_url }}">{{   item.title  }}</a></li>
         {%     endfor      %}

@@ -1,0 +1,44 @@
+{%  if post %}
+<section id="blog">
+  <div class="container">
+       <div class="row">
+            <div class="col-md-12 col-sm-12">
+             <div class="clearfix"></div>
+             
+             {%    for post in post   %}
+             <div class="col-md-3 col-sm-3">
+                 
+                  <section id="gallery">
+                       <div class="gallery-thumb">
+                           
+                            {%  if post.photo  %}
+                            <a href="{{ post.link }}" class="image-popup">
+                            <img src="{{ post.photo }}" alt="{{ post.photo }}" class="img-responsive">
+                            </a>
+                            {%  else %}
+                            <a href="{{ post.get_absolute_url }}" class="image-popup">
+                            <img src="https://picsum.photos/id/1060/300/200/?blur=2" class="img-responsive" alt="{{ post.photo }}">
+                            </a>
+                            {%  endif  %}
+                       
+                       </div>
+                       </section>
+                       <div class="blog-post-title">
+                            <h3><a href="{{ post.link }}">{{ post.title }}</a></h3>
+                       </div>
+                  <h4><span>Posted by: <span class='author-name'>{{  post.author }}</span></span></h4>
+                  
+                  <div class="card-text">
+                  <h4>{{ post.description|safe|linebreaks|truncatewords:30 }}</h4>
+                  </div>
+                  <h4><span>{{ post.date }}</span></h4>
+                  
+             </div>
+
+             {%    endfor   %}
+        </div>      
+      
+   </div>
+</div>      
+   </section>
+   {%  endif  %}

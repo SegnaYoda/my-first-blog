@@ -4,11 +4,6 @@
 Авторизация :: {{ block.super }}
 {%    endblock    %}
 
-<!--
-{%   block sidebar   %}
-{% include 'inc/_sidebar.html' %}
-{%    endblock    %}
--->
 
 {%   block content   %}
 <section id="blog">
@@ -21,6 +16,7 @@
                          <form method="post">
                               {% csrf_token %} 
                               {{ form.as_p }}
+                              
                               <div class="col-md-3 col-sm-4">
                                    <input name="submit" type="submit" class="form-control" id="submit" value="Авторизация">
                          </div>
@@ -29,7 +25,9 @@
 
           </div>
      </div>
-</div>     
+</div>   
+
+
      </section>
 
 {%    endblock    %}

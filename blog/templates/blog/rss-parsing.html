@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load rssview %}
+{%   block title   %}
+RSS лента :: {{ block.super }}
+{%    endblock    %}
+
+
+{%   block content   %}
+
+    <div class="container">
+         <div class="row">
+              <br>
+              <div class="col-md-offset-1 col-md-10 col-sm-12">                   
+<h1>RSS лента</h1>
+         </div>
+
+{% get_rssfeed 'http://www.popmech.ru/out/public-technologies.xml' 8 %}
+
+</div> 
+</div>
+
+{%    endblock    %}

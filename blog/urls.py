@@ -17,6 +17,9 @@ urlpatterns = [
     path('register/', register, name='register'),
     path('login/', user_login, name='login'),
     path('logout/', user_logout, name='logout'),
+    path('add-post/', add_post, name='add_post'), 
+    path('personalaccount/', personalaccount, name='personalaccount'), 
+    path('rssfeed/', rssfeed, name='rssfeed'), 
     ]
 
     #path('test/', tests),]

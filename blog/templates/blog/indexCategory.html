@@ -53,7 +53,7 @@
                          <div class="blog-post-title">
                               <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
                          </div>
-                    <h4><span>Posted by: <span class='author-name'>{{ post.author }}</span></span></h4>
+                    <h4><span>Posted by: <span class='author-name'>{{  post.author.author }}</span></span></h4>
                     <div class="card-text">
                     <h4>{{ post.content|safe|linebreaks|truncatewords:20 }}</h4>
                     </div>
@@ -64,6 +64,8 @@
 
 
                {%  get_popular_single 1 %}
+
+               
         
      </div>
 </div>      

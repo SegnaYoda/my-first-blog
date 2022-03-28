@@ -18,11 +18,12 @@
           <div class="row">
  
                <div class="col-md-12 col-sm-12">
-                {%    for post in posts   %}    
-                <h1>Результаты поиска по запросу</h1>
-                {%   empty  %}
-               <h1>По вашему запросу ничего не найдено</h1>
-               {%    endfor   %}
+                {%    if posts.count > 0  %}    
+                <h1>Результаты поиска по запросу: "{{  result  }}"</h1>
+                <h4>Количество найденных статей: {{  posts.count  }}</h4>
+                {%   else  %}
+               <h1>По запросу "{{  result  }}" ничего не найдено</h1>
+               {%    endif   %}
                </div>
           </div>
      </div>
@@ -56,18 +57,29 @@
                          </div>
                          </section>
                
-                    <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
-                    <h4><span>Posted by: <span class='author-name'>{{ post.author }}</span></span></h4>
+                         <div class="blog-post-title">
+                              <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+                         </div>
+                    <h4><span>Posted by: <span class='author-name'>{{ post.author.author }}</span></span></h4>
                     <div class="card-text">
                     <h4>{{ post.content|safe|linebreaks|truncatewords:20 }}</h4>
                     </div>
                     <h4><span>{{ post.created_at }}</span></h4>
                </div>
+               {%   empty  %}
+               <div class="col-md-offset-1 col-md-10 col-sm-12">
+                    <div class="blog-comment-form">
+                         
+                              <h3>Попробуйте ещё раз</h3>
+                              <form action="{%  url 'search' %}" method="get">
+                                   <input type="text" class="form-control" placeholder="Поиск..." name="s" required>
+                              </form>
+                         </div>
                {%    endfor   %}
 
           </div>
      </div>
                
      </section>
-
+     
 {%   endblock   %}

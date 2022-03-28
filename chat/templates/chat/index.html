@@ -1,0 +1,81 @@
+{%  extends 'base.html'  %}
+{%  load static %}
+{% load cache %}
+
+{% block title %}Chat Rooms  ::   {{   block.super  }}{% endblock %}
+
+{%  block content %}
+
+<section id="home" class="main-gallery parallax-section">
+     <div class="overlay"></div>
+     <div id="particles-js"></div>
+     <div class="container">
+          <div class="row">
+               <div class="col-md-12 col-sm-10">
+                {% if request.user.is_authenticated %}
+                    <h1>Chat Rooms</h1>
+                    <h4>Django HTML CSS JS</h4>      
+               </div>
+                            <div class="col-md-12 col-sm-10">
+                            <div class="blog-comment-form">
+                                {{ user.username|json_script:"username"  }}
+                            <h3>Выберите кому отправить сообщение</h3>                    
+
+                            <select name="user-chat" id="s1" style="color:#000000">
+    
+            {% for user in user_s %}
+                {% if user == request.user %}
+            
+                {% else %}
+                <option class="form-control" id="room-name-input" value="{{ user }}" >{{ user.user.first_name }} {{  user.user.last_name }}</option>
+                {% endif %}
+            {% endfor  %}
+        
+        </select>
+<br>
+<br>
+</div>
+<div class="col-md-4 col-sm-4"></div>
+  <div class="col-md-4 col-sm-4">
+<div class="blog-comment-form">
+    <input name="submit" type="submit" class="form-control" id="room-name-submit" value="Отправить">
+</div>
+</div>
+<div class="col-md-4 col-sm-4"></div>
+
+
+    <script>
+
+        const username = JSON.parse(document.getElementById('username').textContent);
+       
+        document.querySelector('#s1').focus();
+        document.querySelector('#s1').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#room-name-submit').click();
+            }
+        };
+
+        document.querySelector('#room-name-submit').onclick = function(e) {
+            var roomName = username + document.querySelector('#s1').value;
+           
+            window.location.pathname = '/chat/' + roomName + '/';
+        };
+    </script>
+
+{% else %}
+<h3>Ой, кажется вы не вошли в свой аккаунт =(</h3>  
+<h3>Чтобы написать какому-либо пользователю <a href="{%  url 'login' %}">войдите</a> на сайт или <a href="{%  url 'register' %}">зарегиструйтесь.</a></h3> 
+
+{% endif %}
+</div>
+</div> 
+</div>    
+</section>
+{%   endblock   %}
+
+
+
+
+
+
+

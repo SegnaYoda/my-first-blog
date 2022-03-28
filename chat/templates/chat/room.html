@@ -1,0 +1,94 @@
+{%  extends 'base.html'  %}
+{%  load static %}
+{% load cache %}
+
+{% block title %}Chat Rooms - {{ room_name }}  ::   {{   block.super  }}{% endblock %}
+
+
+{%  block content %}
+
+<section id="home" class="main-gallery parallax-section">
+    <div class="overlay"></div>
+    <div id="particles-js"></div>
+    
+<div class="col-md-offset-1 col-md-10 col-sm-10">
+<div class="container">
+         <div class="row">
+            {% if request.user.is_authenticated %}
+<h3>Пользователь {{ user.first_name }} {{ user.last_name }}</h3>
+<div class="blog-comment-form">
+    <br>
+    <textarea id="chat-log" cols="80" rows="20" style="color:#000000" readonly
+    autofocus ></textarea><br>
+    <input id="chat-message-input" type="text" size="80" style="color:#000000"><br>
+    
+    <div class="col-md-4 col-sm-4"></div>
+    <div class="col-md-4 col-sm-4">
+    <input name="submit" type="submit" class="form-control" id="chat-message-submit" value="Отправить">
+</div>
+<div class="col-md-4 col-sm-4"></div>
+</div>
+
+    {{ room_name|json_script:"room-name" }}
+    {{ user.first_name|json_script:"first_name"  }}{{ user.last_name|json_script:"last_name"  }}
+    <script>
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        const first_name = JSON.parse(document.getElementById('first_name').textContent);
+        const last_name = JSON.parse(document.getElementById('last_name').textContent);
+        
+        var options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            weekday: 'long',
+            timezone: 'UTC',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric'
+            };
+
+        const time = new Date().toLocaleString("ru", options);
+        
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/chat/'
+            + roomName
+            + '/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            document.querySelector('#chat-log').value += (data.message + '\n');
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': time + ',     от ' + first_name + ' ' + last_name + ' : ' + '\n' + message + '\n'
+            }));
+            messageInputDom.value = '';
+        };
+    </script>
+{% else %}
+<h3>Ой, кажется вы не вошли в свой аккаунт =(</h3>  
+<h3>Чтобы написать какому-либо пользователю <a href="{%  url 'login' %}">войдите</a> на сайт или <a href="{%  url 'register' %}">зарегиструйтесь.</a></h3> 
+
+{% endif %}
+</div>
+</div>
+</div>     
+</section>
+{%   endblock   %}

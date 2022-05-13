@@ -19,11 +19,14 @@
   <link rel="stylesheet" href="{%  static 'css/bootstrap.min.css' %}">
   <link rel="stylesheet" href="{%  static 'css/font-awesome.min.css' %}">
   <link rel="stylesheet" href="{%  static 'css/magnific-popup.css' %}">
+  <link rel="stylesheet" href="{%  static 'css/toast.min.css' %}"> <!-- всплывающие уведомления -->
+  <link rel="stylesheet" href="{%  static 'css/style-chat.css' %}"> <!-- chat -->
   {% endcache %}
   <!-- Main css -->
   <link href="{%  static 'css/style.css' %}" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Lora|Merriweather:300,400" rel="stylesheet">
   <link rel="home" type="application/rss+xml" href="{% url 'post_feed' %}" />
+
 </head>
 
 <body>
@@ -56,9 +59,143 @@
     </div>
   </div>
   {% endif %}
-  <!-- Blog Section -->
+
+
+  <!-- MESSAGE POP Section 
+
+  <body style="min-height: 100vh;">
+
+    <div style="max-width: 280px; padding: 15px; border: 1px solid #f5f5f5;">
+      <div style="margin-bottom: 0.5rem;">
+        Название заголовка:
+        <input name="toast-title" type="text" value="Заголовок" style="width: 100%;">
+      </div>
+      <div style="margin-bottom: 0.5rem;">
+        <input name="toast-without-title" type="checkbox">без заголовка
+      </div>
+      <div style="margin-bottom: 0.5rem;">
+        Текст сообщения:
+        <input name="toast-text" type="text" value="Сообщение..." style="width: 100%;">
+      </div>
+      <div style="margin-bottom: 0.5rem;">
+        Тема:
+        <select class="form-control" name="toast-theme" style="width: 100%;">
+          <option selected value="default">default</option>
+          <option value="primary">primary</option>
+          <option value="secondary">secondary</option>
+          <option value="success">success</option>
+          <option value="danger">danger</option>
+          <option value="warning">warning</option>
+          <option value="info">info</option>
+          <option value="light">light</option>
+          <option value="dark">dark</option>
+        </select>
+      </div>
+      <div style="margin-bottom: 0.5rem;">
+        <input name="toast-autohide" type="checkbox" checked>автоматически скрывать
+      </div>
+      <div style="margin-bottom: 0.5rem;">
+        Скрывать через (миллисекунд):
+        <input name="toast-interval" type="text" value="10000" style="width: 100%;">
+      </div>
+      <div style="margin-bottom: 0.5rem;">
+        <button id="add-toast" type="button" style="width: 100%;">Добавить toast</button>
+      </div>
+    </div>
+-->
+
+<!-- Blog Section -->
 
   {% block content %} {% endblock %}
+
+  <!--
+  <script>
+    document.querySelector('[name="toast-without-title"]').onchange = (e) => {
+      document.querySelector('[name="toast-title"]').disabled = e.target.checked;
+    }
+
+    document.addEventListener('hide.toast', (e) => {
+      console.log(e.detail.target);
+    });
+
+    document.querySelector('#add-toast').onclick = () => {
+      /*
+        title - название заголовка
+        text - текст сообщения
+        theme - тема
+        autohide - нужно ли автоматически скрыть всплывающее сообщение через interval миллисекунд interval - количество миллисекунд через которые необходимо скрыть сообщение
+      */
+      new Toast({
+        title: document.querySelector('[name="toast-without-title"]').checked === true ?
+          false : document.querySelector('[name="toast-title"]').value,
+        text: document.querySelector('[name="toast-text"]').value,
+        theme: document.querySelector('[name="toast-theme"] option:checked').value,
+        autohide: document.querySelector('[name="toast-autohide"]').checked,
+        interval: parseInt(document.querySelector('[name="toast-interval"]').value)
+      });
+    }
+  </script> 
+-->
+
+{{ user.username|json_script:"user_name"  }}
+<script>
+
+  const user_name = JSON.parse(document.getElementById('user_name').textContent);
+  var options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long',
+      timezone: 'UTC',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric'
+      };
+
+  const time = new Date().toLocaleString("ru", options);
+  
+  const MessageSocket = new WebSocket(
+      'ws://'
+      + window.location.host
+      + '/ws/base/'
+      + user_name
+      + '/'
+  );
+
+  MessageSocket.onmessage = function(e) {
+      const data = JSON.parse(e.data);
+      // уведомление 
+      
+      new Toast({
+              title: 'Сообщение от ' + data.first_name + ' ' + data.last_name,
+              text: data.message,
+              theme: 'primary',
+              autohide: true,
+              interval: 9000
+              });
+          
+      // конец функции уведомление
+      };
+
+
+  MessageSocket.onclose = function(e) {
+      console.error('Chat socket closed unexpectedly');
+  };
+
+  document.querySelector('#chat-message-input').focus();
+  document.querySelector('#chat-message-input').onkeyup = function(e) {
+      if (e.keyCode === 13) {  // enter, return
+          document.querySelector('#chat-message-submit').click();
+      }
+  };
+
+  // MessageSocket.send(JSON.stringify({   //отправка сообщения
+  //         'user': user_name
+  //     }));
+     
+
+</script>
+
 
   {% include 'inc/_pagination.html' %}
 
@@ -80,6 +217,8 @@
   <script src="{%  static 'js/jquery.parallax.js' %}"></script>
   <script src="{%  static 'js/smoothscroll.js' %}"></script>
   <script src="{%  static 'js/custom.js' %}"></script>
+  <script src="{%  static 'js/toast.min.js' %}"></script>
+  <script src="{%  static 'js/chat.js' %}"></script>
   {% endcache %}
 
 </body>

@@ -24,11 +24,9 @@
                             <select name="user-chat" id="s1" style="color:#000000">
     
             {% for user in user_s %}
-                {% if user == request.user %}
-            
-                {% else %}
+                
                 <option class="form-control" id="room-name-input" value="{{ user }}" >{{ user.user.first_name }} {{  user.user.last_name }}</option>
-                {% endif %}
+                
             {% endfor  %}
         
         </select>

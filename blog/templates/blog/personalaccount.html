@@ -43,7 +43,7 @@
 
                     <div class="col-md-3 col-sm-3">
                     <div class="gallery-thumb">
-                              <a href="#" class="image-popup">
+                              <a href="{%  url 'contacts' %}" class="image-popup">
                                    <img src="{%  static 'images/friends.png' %}" class="img-responsive" alt="Gallery Image">
                                    <center><h3>Контакты</h3></center>
                                         </a></div></div>
@@ -61,6 +61,17 @@
                                    <img src="{%  static 'images/rss.png' %}" class="img-responsive" alt="Gallery Image">
                                    <h3><center>Подписки RSS</center></h3>
 							  </a></div></div>
+
+{% if request.user.is_superuser %}                                    
+<div class="col-md-offset-1 col-md-10 col-sm-3">
+                    <div class="col-md-3 col-sm-3">
+                         <div class="gallery-thumb">
+                              <a href="{% url 'admin:index' %}" class="image-popup">
+                                   <img src="{%  static 'images/admin.png' %}" class="img-responsive" alt="Gallery Image">
+                                   <h3><center>Админ</center></h3>
+							  </a></div></div>
+          </div>
+          {%   endif   %}
 
 {%   endif   %}
 <!-- ******************************-->    

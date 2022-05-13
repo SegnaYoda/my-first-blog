@@ -1,3 +1,4 @@
+from enum import unique
 from telnetlib import STATUS
 from django.urls import reverse
 from distutils.command.upload import upload
@@ -23,7 +24,7 @@ def slugify(s):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) #related_name='userprofile'
-    slug = models.CharField(max_length=50, verbose_name='Url', blank=True, default='-')
+    slug = models.CharField(max_length=50, verbose_name='Url', blank=True, null=True)
     avatar = models.ImageField(upload_to ='avatars/%Y/%m', default='avatars/avatar1.jpg' ,verbose_name='Avatar', blank=True, null=True)
     author = models.CharField(max_length=100, verbose_name='Псевдоним, связан со статьями', blank=True)
     description = models.TextField(max_length=300, verbose_name= 'Описание автора', default='Нет описания', blank=True)
@@ -94,7 +95,7 @@ class Post(models.Model):
         return reverse('post', kwargs={"slug": self.slug})      #формирование ссылки
 
     def save(self, *args, **kwargs):
-        self.slug = (slugify(self.title))[:70]
+        self.slug = (slugify(self.title))[:50]
         super(Post, self).save(*args, **kwargs)
 
     class Meta:

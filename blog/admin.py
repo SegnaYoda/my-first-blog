@@ -66,14 +66,14 @@ class UserProfileAdminForm(forms.ModelForm):   #редактирование к�
         fields = '__all__'
 
 class UserProfileAdmin(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ("user",)}
+    
     save_on_top = True  #дублирует панель сохранения в вверх
-    list_display = ('id', 'user', 'slug', 'get_avatar', 'author', 'description') 
+    list_display = ('id', 'user', 'get_avatar', 'author', 'description') 
     list_display_links = ('id', 'user', 'get_avatar')
     search_fileds = ('user', 'author' )
     list_filter = ('author',)
     readonly_fields = ('get_avatar',) # обязательно read only режим
-    fields = ('user', 'slug', 'avatar', 'get_avatar', 'author', 'description') # Указываем поля, которые нужно отобразить в административной форме при создании нового автора
+    fields = ('user', 'avatar', 'get_avatar', 'author', 'description') # Указываем поля, которые нужно отобразить в административной форме при создании нового автора
 
     def get_avatar(self, obj):       
         if obj.avatar:

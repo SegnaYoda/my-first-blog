@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load rssview %}
+{%   block title   %}
+{{title}} :: {{ block.super }}
+{%    endblock    %}
+
+
+{%   block content   %}
+
+    <div class="container">
+         <div class="row">
+              <br>
+              <div class="col-md-offset-1 col-md-10 col-sm-12">                   
+<h1>Мои контакты</h1>
+<br>
+<hr>
+<br>
+         </div>
+
+         {%  if contacts %}
+         <section id="blog">
+           <div class="container">
+                <div class="row">
+                     <div class="col-md-12 col-sm-12">
+                      <div class="clearfix"></div>
+                      
+                      {%    for contact in contacts   %}
+                      {%  if contact.user.username != user.username %}
+                      <div class="col-md-3 col-sm-3">
+                          
+                                <div class="gallery-thumb">
+                                     {%  if contact.avatar  %}
+                                     <a href="#" class="image-popup">
+                                   <img src="{{   contact.avatar.url }}" class="img-responsive img-circle">
+                                     </a>
+                                     {%  endif %}
+                                </div>
+                            
+                                <div class="blog-post-title">
+                                     <h3><a href="#">{{ contact.user.first_name }} {{ contact.user.last_name }}</a></h3>
+                                </div>
+                           <h4><span>Псевдоним <span class='author-name'>{{  contact.author }}</span></span></h4>
+                           
+                           <div class="card-text">
+                           <h4>{{ contact.description|safe|linebreaks }}</h4>
+                           </div>
+                           <h4><span>Зарегистрирован {{ contact.user.date_joined|timesince }} назад</span></h4>
+                           
+                      </div>
+                      {%  endif %}
+                      {%    endfor   %}
+                      
+                 </div>      
+               
+            </div>
+         </div>      
+            </section>
+            {%  endif  %}
+
+</div> 
+</div>
+
+{%    endblock    %}

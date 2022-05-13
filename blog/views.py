@@ -169,6 +169,21 @@ def personalaccount(request):  # контроллер функции старт�
     return render(request, 'blog/personalaccount.html')
 
 
+class Contacts(ListView):
+    model = UserProfile
+    template_name = 'blog/contacts.html'
+    context_object_name = 'contacts'
+    paginate_by = 4  # количество статей на одной сранице
+
+    def get_queryset(self):
+        return UserProfile.objects.all().select_related('user')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Мои контакты'
+        return context
+
+
 def get_category(request, slug):
     return render(request, 'blog/category.html')
 

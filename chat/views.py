@@ -5,14 +5,15 @@ from django.utils.safestring import mark_safe
 from django.views.generic import ListView
 from django.contrib.auth.models import User
 from blog.models import UserProfile
+from .models import Room
 
 
 
 def room(request, room_name):
-    return render(request, 'chat/room.html', {
+    room, created = Room.objects.get_or_create(name=room_name)
+    return render(request, 'chat/room_original.html', {
         'room_name': room_name
     })
-
 
 
 class GetUser(ListView):

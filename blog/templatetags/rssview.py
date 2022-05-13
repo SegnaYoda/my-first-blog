@@ -17,7 +17,7 @@ def get_rssfeed(feedrss_url, posts_to_show=5):
             published = datetime.date(pub_date[0], pub_date[1], pub_date[2] )
             post.append({
                         'title': feed['entries'][i].title,
-                        'author': feed['entries'][i].author,
+                        #'author': feed['entries'][i].author,
                         'link': feed['entries'][i].link,
                         'description': feed['entries'][i].description,
                         'date': published,
